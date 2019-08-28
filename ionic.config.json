@@ -1,5 +1,7 @@
 {
   "name": "WolfGhostOnline",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
