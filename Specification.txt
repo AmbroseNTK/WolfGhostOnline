@@ -1,0 +1,50 @@
+1. Login: Google Auth (npm i @angular/fire firebase)
+	1. Nút login with Google
+		1. Nếu là lần đầu: firebase: users/$uid/{name:"Tèo", photoUrl:"https://..."}
+	2. Login -> Main
+		1. Đọc dữ liệu ng dùng và hiển thị
+		2. Tạo Game
+		3. Tham gia
+		4. Cài đặt
+
+2. Tạo game
+	1. Đăng ký
+		1. Phát sinh code (6 ký tự gồm chữ in + số VD: 6HQ7D9)
+		2. Cho phép chọn số lượng các loại nhân vật (Dân (pp), Sói (wf), Tiên tri (pr), Bảo vệ (gr), Phù thủy (mg), Thằng Ngu(dp))
+			Ex: 	Dân x2 
+				Sói x2
+				Phù thủy x1
+				Bảo vệ x1
+				Tiên tri x1
+				Thằng ngu x1
+		3. Nhấn nút apply: Kiểm tra các điều kiện ràng buộc VD: số lượng sói < còn lại
+		4. Nếu ko thõa thì thông báo sai cái gì, chọn lại
+		5. Nếu ok -> firebase: 	game/$gameID/config/characters/{ pp:2, wf:2, pr:1, gr:1, mg:1, dp:1}
+					game/$gameID/days:dayID
+					game/$gameID/stories/$dayID:
+					game/$gameID/status/$uid/{dayID:...,isAlive:true/false}		
+	2. Chờ chơi
+		1. Danh sách thành viên (Tên, avatar)
+			1. Load danh sách từ -> firebase: game/$gameID/players/
+				RAW: {
+					$uid1: { name:..., photoUrl:...},
+					...
+				}
+
+ 		2. Nếu check thấy đủ số lượng, cho phép nhấn Start
+		3. Nhấn start -> Phân vai cho từng User (Random)
+			Với mỗi user đã được gán role VD: $uid có vai wf -> cập nhật firebase: game/$gameID/players/$uid/{...,role:wf }
+3. Vào game (Host)
+	1. Message: Hướng dẫn cho host biết phải làm gì
+	2. Tabs:
+		1. Điều khiển
+			1. Hiển thị ngày thứ X
+			2. Nút bắt đầu đêm thứ X
+				1. Tăng n lên 1
+				2. Cập nhật firebase: game/$gameID/{..., days:n}
+				3. Chuyển message cho sói:
+					firebase: game/$gameID/stories/n/wf/{message: Chọn người bạn muốn giết, selection:{}}
+							
+			3. Đêm thứ X kết thúc khi nhận được message tại: firebase: game/$gameID/stories/n/host:{message: Sói giết X, Phù thủy giết X AND/OR cứu X, Bảo vệ cứu X}
+		2. Thành viên
+			Hiển thị đầy đủ danh sách (name, photo, role)
